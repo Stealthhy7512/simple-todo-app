@@ -1,5 +1,6 @@
 export type Task = {
   title: string,
   description: string,
-  date: string,
+  date: Date | null,
+  priority: boolean,
 }
