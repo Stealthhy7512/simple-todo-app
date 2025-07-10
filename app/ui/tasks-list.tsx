@@ -1,126 +1,76 @@
 'use client'
 
-import React, { useState } from 'react';
-// import { showProperties } from '@/app/lib/actions';
+import React, { useState } from 'react'
 import { Task } from '@/app/lib/definitions'
-import { useSidebar } from '@/hooks/use-sidebar';
-import { HiChevronLeft } from "react-icons/hi";
-import {cn} from '@/lib/utils';
-import {Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle, SheetFooter} from '@/components/ui/sheet'
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import TaskDetails from '@/app/ui/task-details'
+import { FcHighPriority, FcInfo } from 'react-icons/fc'
 
-const tasks: Task[] = [
+const initialTasks: Task[] = [
   {
-    title: 'task one',
-    description: 'Task one description',
-    date: '30/12/2002'
+    title: 'Prepare for concert',
+    description: 'Take a shower, brush teeth, get dressed.',
+    date: new Date(2025, 6, 6),
+    priority: true,
   },
   {
-    title: 'task two',
+    title: 'Task two',
     description: 'Task two description',
-    date: '02/2/1998'
+    date: null,
+    priority: false,
+  },
+  {
+    title: '',
+    description: '',
+    date: null,
+    priority: false,
   }
 ]
 
 export default function TasksList() {
-  const { isOpen, toggle } = useSidebar()
-  const [status, setStatus] = useState(false)
+  const [tasks, setTasks] = useState(initialTasks)
   const [open, setOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const [dateOpen, setDateOpen] = useState(false)
-  const [date, setDate] = useState<Date | undefined>(undefined)
-
-  const showProperties = () => {
-    setStatus(true);
-    toggle();
-    setTimeout(() => setStatus(false), 500);
-  }
 
   const openSheet = (task: Task) => {
     setSelectedTask(task)
     setOpen(true)
   }
-  return (
-    <div className="flex-1 overflow-hidden py-4">
-      <Sheet open={open} onOpenChange={setOpen}>
-        <div className="flex h-full w-full">
-          <div className="bg-stone-100 rounded-xl p-4 flex-grow overflow-hidden">
-            {
-              tasks.map((task: Task, i: number) => {
-                return (
-                  <button
-                    key={i}
-                    className="m-2 my-4 bg-stone-200 p-3 rounded-xl w-full break-all whitespace-pre-wrap text-left"
-                    // onClick={showProperties}
-                    onClick={() => openSheet(task)}
-                  >
-                    {task.title}
-                  </button>
-                )})
-            }
-          </div>
-          <SheetContent side="right" className="md:w-full w-1/3 p-4">
-            <div className="flex justify-between items-center mb-0">
-              <SheetHeader>
-                <SheetTitle className="font-bold text-2xl">Details</SheetTitle>
-              </SheetHeader>
-            </div>
 
-            {selectedTask && (
-              <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="title">Title</Label>
-                  <Input id="title" defaultValue={selectedTask.title} />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="descripton">Description</Label>
-                  <Textarea
-                    id="description"
-                    defaultValue={selectedTask.description}
-                    className="resize-none h-36"
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="date">End Date</Label>
-                  <Popover open={dateOpen} onOpenChange={setDateOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        id="date"
-                        className="w-48 justify-between font-normal"
-                      >
-                        {selectedTask.date ? selectedTask.date : "Select date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        captionLayout="dropdown"
-                        onSelect={(date) => {
-                          setDate(date)
-                          setOpen(false)
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-            )}
-            <SheetFooter>
-              <Button type="submit">Save Changes</Button>
-              <SheetClose asChild>
-                <Button variant="outline">Close</Button>
-              </SheetClose>
-            </SheetFooter>
-          </SheetContent>
-        </div>
-      </Sheet>
+  const handleSave = (updatedTask: Task) => {
+    setTasks(prev =>
+      prev.map(t =>
+        t === selectedTask ? updatedTask : t
+      )
+    )
+    setOpen(false)
+  }
+
+  return (
+    <div className="flex-1 overflow-hidden py-4 flex justify-center">
+      <div className="bg-stone-100 rounded-xl p-3 flex-grow overflow-hidden mx-auto flex flex-col items-center">
+        {tasks.map((task, i) => (
+          <button
+            key={i}
+            className="m-2 my-3 bg-stone-200 p-3 rounded-xl w-1/2 flex items-center justify-between gap-4 break-all whitespace-pre-wrap text-left"
+            onClick={() => openSheet(task)}
+          >
+            <div className="flex items-center gap-2">
+              {task.priority && <FcHighPriority className="w-5 h-5" />}
+              <span>{task.title || ''}</span>
+            </div>
+            <span className="hover:scale-110 hover:text-blue-500 transition">
+              <FcInfo className="w-5 h-5 shrink-0" />
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <TaskDetails
+        open={open}
+        setOpenAction={setOpen}
+        task={selectedTask}
+        onSaveAction={handleSave}
+      />
     </div>
   )
 }
