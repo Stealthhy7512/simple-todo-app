@@ -1,13 +1,20 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-func SetupRouter() *gin.Engine {
+	"github.com/Stealthhy7512/simple-todo-app/handler"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRouter(h *handler.TaskHandler) *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
+
+	r.POST("/seed", h.SeedTask)
 
 	return r
 }

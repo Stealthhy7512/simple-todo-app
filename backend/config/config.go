@@ -14,16 +14,18 @@ import (
 type Config struct {
 	MongoURI   string
 	ServerPort string
+	Database   string
 }
 
-func LoadEnv() *Config {
+func LoadEnv() Config {
 	if err := godotenv.Load(); err != nil {
-		log.Println(".env file not found.")
+		log.Fatal(".env file not found.")
 	}
 
-	return &Config{
+	return Config{
 		MongoURI:   getEnv("MONGO_URI"),
 		ServerPort: getEnv("PORT"),
+		Database:   getEnv("DATABASE"),
 	}
 }
 
@@ -47,7 +49,7 @@ func ConnectMongo(uri string) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	log.Println("Pinged deployment. Successfully connected to MongoDB.")
+	log.Println("\nPinged deployment. Successfully connected to MongoDB.")
 
 	return client, nil
 }
