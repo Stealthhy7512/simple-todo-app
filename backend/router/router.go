@@ -10,11 +10,21 @@ import (
 func SetupRouter(h *handler.TaskHandler) *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	test := r.Group("/test")
+	{
+		test.GET("/health", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{"status": "ok"})
+		})
 
-	r.POST("/seed", h.SeedTask)
+		test.POST("/seed", h.SeedTask)
+
+		test.GET("/find", h.FindAll)
+	}
+
+	// api := r.Group("/api")
+	// {
+
+	// }
 
 	return r
 }
