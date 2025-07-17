@@ -9,22 +9,13 @@ import (
 	"github.com/Stealthhy7512/simple-todo-app/repository"
 	"github.com/Stealthhy7512/simple-todo-app/router"
 	"github.com/Stealthhy7512/simple-todo-app/service"
+	"github.com/gin-gonic/gin"
 	// "github.com/gin-gonic/gin"
 	// "net/http"
 )
 
 func main() {
-	// router := gin.Default()
-
-	// router.GET("/", func(c *gin.Context) {
-	// 	c.String(200, "Hello")
-	// })
-
-	// router.GET("/bye", func(c *gin.Context) {
-	// 	c.String(200, "Bye")
-	// })
-
-	// router.Run(":8080")
+	gin.ForceConsoleColor()
 
 	cfg := config.LoadEnv()
 
@@ -41,14 +32,14 @@ func main() {
 	}()
 
 	db := client.Database(cfg.Database)
-	todoRepo := repository.NewRepository(db)
-	todoService := &service.TodoService{
-		TodoRepo: todoRepo,
+	taskRepo := repository.NewRepository(db)
+	taskService := &service.TaskService{
+		TaskRepo: taskRepo,
 	}
-	todoHandler := &handler.TaskHandler{
-		TodoService: todoService,
+	taskHandler := &handler.TaskHandler{
+		TaskService: taskService,
 	}
-	r := router.SetupRouter(todoHandler)
+	r := router.SetupRouter(taskHandler)
 
-	r.Run(":" + cfg.ServerPort)
+	r.Run("localhost:" + cfg.ServerPort)
 }
