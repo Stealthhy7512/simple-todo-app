@@ -7,21 +7,21 @@ import {
 import TasksList from '@/app/ui/tasks-list'
 
 export default function Home() {
-
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-screen overflow-hidden">
+      <div className="flex h-screen w-screen overflow-hidden bg-muted">
         <AppSidebar />
-        <SidebarInset className="flex flex-1 flex-col bg-white">
-          <div className="flex flex-col flex-1">
-            <div className="flex items-center p-3 bg-white shrink-0 ml-2 gap-4">
-              <SidebarTrigger className="-ml-1" />
-              <h1 className="text-4xl font-extrabold">TASKS</h1>
+        <SidebarInset className="flex flex-1 flex-col bg-background">
+          <div className="flex items-center justify-between px-6 py-4 border-b">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <h1 className="text-3xl font-bold tracking-tight">Tasks</h1>
             </div>
-            <TasksList />
           </div>
+          <TasksList />
         </SidebarInset>
       </div>
     </SidebarProvider>
-  )
+  );
 }
+

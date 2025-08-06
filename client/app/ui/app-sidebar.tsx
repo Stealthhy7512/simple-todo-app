@@ -29,16 +29,18 @@ const items = [
 export default function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarContent className="bg-stone-100 text-black rounded-4xl py-2">
+      <SidebarContent className="bg-muted text-muted-foreground rounded-none border-r">
         <SidebarGroup className="gap-4">
-          <SidebarGroupLabel className="font-bold text-2xl text-black py-6">Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-bold text-lg px-4 py-6 text-foreground">
+            Menu
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="py-5 hover:bg-stone-200 transition-all duration-150 ease-in-out text-base">
-                    <Link href={item.url}>
-                      <item.icon className="text-black"/>
+                  <SidebarMenuButton asChild className="px-4 py-3 hover:bg-accent rounded-md transition">
+                    <Link href={item.url} className="flex items-center gap-2">
+                      <item.icon className="w-5 h-5" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -48,6 +50,7 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
     </Sidebar>
   )
 }
