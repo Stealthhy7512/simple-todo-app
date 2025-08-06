@@ -10,8 +10,6 @@ import (
 	"github.com/Stealthhy7512/simple-todo-app/router"
 	"github.com/Stealthhy7512/simple-todo-app/service"
 	"github.com/gin-gonic/gin"
-	// "github.com/gin-gonic/gin"
-	// "net/http"
 )
 
 func main() {
