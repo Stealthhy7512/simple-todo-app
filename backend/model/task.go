@@ -7,9 +7,9 @@ import (
 )
 
 type Task struct {
-	ID          bson.ObjectID `bson:"_id,omitempty" json:"id"`
+	ID          bson.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
 	Title       string        `bson:"title" json:"title"`
 	Description string        `bson:"description" json:"description"`
-	Date        time.Time     `bson:"date" json:"date"`
+	Date        *time.Time    `bson:"date,omitempty" json:"date,omitempty"`
 	Priority    bool          `bson:"priority" json:"priority"`
 }
