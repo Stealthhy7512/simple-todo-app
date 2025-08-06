@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Switch } from '@/components/ui/switch'
 import { FcCalendar, FcHighPriority } from 'react-icons/fc'
+import axios from 'axios';
 
 export default function TaskDetails({
                                       open,
@@ -39,25 +40,46 @@ export default function TaskDetails({
     if (task) {
       setTitle(task.title)
       setDescription(task.description)
-      setDate(task.date ?? undefined)
-      setDateEnable(task.date !== null)
+
+      // handle undefined, null, or string/Date
+      const rawDate = task.date
+      const hasValidDate =
+        rawDate !== undefined &&
+        rawDate !== null &&
+        !Number.isNaN(new Date(rawDate).getTime())
+
+      setDateEnable(hasValidDate)
+      setDate(hasValidDate ? new Date(rawDate as string | Date) : undefined)
+
       setPriority(task.priority)
     }
   }, [task])
 
-  const handleSave = () => {
+
+  const handleSave = async () => {
     if (!task) return
 
     const updatedTask: Task = {
       ...task,
       title,
       description,
-      date: dateEnable ? date ?? null : null,
+      date: dateEnable ? (date ?? null) : null,
       priority,
     }
 
-    onSaveAction(updatedTask)
+    try {
+      const res = await axios.put(`/api/update/${task.id}`, updatedTask)
+
+      // Optional: Use server response if it returns full updated task
+      const saved = res.data ?? updatedTask
+      onSaveAction(saved)
+      setOpenAction(false)
+    } catch (err) {
+      console.error("Failed to update task:", err)
+      // Optional: show toast or error
+    }
   }
+
 
   return (
     <Sheet open={open} onOpenChange={setOpenAction}>
