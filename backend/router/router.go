@@ -16,15 +16,22 @@ func SetupRouter(h *handler.TaskHandler) *gin.Engine {
 			c.JSON(http.StatusOK, gin.H{"status": "ok"})
 		})
 
-		test.POST("/seed", h.SeedTask)
+		test.POST("/seed", h.Seed)
 
 		test.GET("/find", h.FindAll)
 	}
 
-	// api := r.Group("/api")
-	// {
+	api := r.Group("/api")
+	{
+		api.POST("/create", h.Create)
 
-	// }
+		find := api.Group("/find")
+		{
+			find.GET("/all", h.FindAll)
+		}
+
+		api.PUT("/update/:id", h.Update)
+	}
 
 	return r
 }

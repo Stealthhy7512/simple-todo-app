@@ -15,12 +15,18 @@ type TaskService struct {
 // 	return s.TodoRepo.FindById(c, id)
 // }
 
-// func (s *TodoService) CreateTodo(c context.Context, todo *model.Task)
+func (s *TaskService) Create(c context.Context, t *model.Task) (*model.Task, error) {
+	return s.TaskRepo.Create(c, t)
+}
 
-func (s *TaskService) SeedTask(c context.Context) (*model.Task, error) {
+func (s *TaskService) Seed(c context.Context) (*model.Task, error) {
 	return s.TaskRepo.Seed(c)
 }
 
 func (s *TaskService) FindAll(c context.Context) ([]*model.Task, error) {
 	return s.TaskRepo.FindAll(c)
+}
+
+func (s *TaskService) Update(c context.Context, t *model.Task) (*model.Task, error) {
+	return s.TaskRepo.Update(c, t)
 }
